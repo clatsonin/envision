@@ -1,0 +1,4 @@
+fastapi
+moviepy
+google-cloud-speech
+google-generativeai
