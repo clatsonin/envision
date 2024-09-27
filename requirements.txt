@@ -1,4 +1,7 @@
 fastapi
+uvicorn
+pydub
 moviepy
 google-cloud-speech
 google-generativeai
+python-dotenv
