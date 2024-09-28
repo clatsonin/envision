@@ -12,7 +12,7 @@ app = FastAPI()
 load_dotenv()
 
 # Access the API key from the environment
-google_api_key = os.getenv("google_api_key")
+google_api_key = os.getenv("GOOGLE_API_KEY")
 
 # Function to process video upload and audio transcription
 def process_video_and_transcribe(file_location):
@@ -55,7 +55,7 @@ async def upload_video_and_transcribe(file: UploadFile = File(...)):
 
     # Generate content based on transcript using Generative AI
     if transcript:
-        genai.configure(api_key=GOOGLE_API_KEY)
+        genai.configure(api_key=google_api_key)
         model = genai.GenerativeModel('gemini-pro')
         question = "Rate this content 1 to 10 for kids: " + transcript
         response = model.generate_content(question)
