@@ -42,10 +42,12 @@ def process_video_and_transcribe(file_location):
     else:
         return ""
 
-
-# Route to handle video upload and transcription
+# Route to handle video upload, transcription, and prompt
 @app.post("/upload-video/")
-async def upload_video_and_transcribe(file: UploadFile = File(...)):
+async def upload_video_and_transcribe(
+    file: UploadFile = File(...),
+    user_prompt: str = Form(...)
+):
     file_location = f"received_{file.filename}"
     with open(file_location, "wb") as video_file:
         video_file.write(await file.read())
@@ -55,16 +57,15 @@ async def upload_video_and_transcribe(file: UploadFile = File(...)):
 
     # Generate content based on transcript using Generative AI
     if transcript:
-        genai.configure(api_key=google_api_key)
+        api_key = genai.configure(api_key=google_api_key)
+        genai.configure(api_key=api_key)
         model = genai.GenerativeModel('gemini-pro')
-        question = "Rate this content 1 to 10 for kids: " + transcript
+        format = "Ratings': 0-10 -->  then 'Reasons': , don't give '\n' use spaces for that, Keep it short and precise"
+        question = "Rate it out of 10 and check if this is suitable for " + user_prompt + ": " + transcript + "in this" + format
         response = model.generate_content(question)
         generated_text = response.text
     else:
         generated_text = "No transcript available."
 
-    return {
-        "message": f"Video '{file.filename}' received and transcribed successfully",
-        "transcript": transcript,
-        "generated_text": generated_text
-    }
+    # Return only the generated text
+    return generated_text
