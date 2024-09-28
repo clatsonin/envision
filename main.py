@@ -12,7 +12,7 @@ app = FastAPI()
 load_dotenv()
 
 # Access the API key from the environment
-google_api_key = os.getenv("GOOGLE_API_KEY")
+google_api_key = os.getenv("google_api_key")
 
 # Function to process video upload and audio transcription
 def process_video_and_transcribe(file_location):
